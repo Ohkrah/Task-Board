@@ -6,18 +6,22 @@ const taskDate = $('#taskDate');
 const taskDescription = $('#taskDescription');
 const submitTask = $('#submitTask');
 
+
+let task; 
+
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
-    let task = {
+    task = {
         //pulled uniqueId() from jquery documentation 
         //https://api.jqueryui.com/uniqueId/#uniqueId
         id: uniqueId(),
 
     }
+    return (task.id)
 }
 
 // Todo: create a function to create a task card
@@ -37,24 +41,24 @@ function renderTaskList() {
        
         //element for title
         const title = document.createElement('div');
-        title.textContent = task.title;
-        title.style.left = task.title.left;
-        title.style.top = task.title.top;
+        title.textContent = taskList[i].title;
+        title.style.left = taskList[i].title.left;
+        title.style.top = taskList[i].title.top;
         title.classList.add('cardTitle', 'draggable');
         taskCard[i].appendChild(title);
         //element for description
         const description = document.createElement('div');
-        description.textContent =task.description;
-        description.style.left =task.description.left;
-        description.style.top =task.description.top;
+        description.textContent =taskList[i].description;
+        description.style.left =taskList[i].description.left;
+        description.style.top =taskList[i].description.top;
         description.classList.add('cardDescription', 'draggable');
         taskCard[i].appendChild(description);
         
         //element for date
         const date = document.createElement('div');
-        date.textContent = task.date;
-        date.style.left = task.date.left;
-        date.style.top = task.date.top;
+        date.textContent = taskList[i].date;
+        date.style.left = taskList[i].date.left;
+        date.style.top = taskList[i].date.top;
         date.classList.add('cardDate', 'draggable');
         taskCard[i].appendChild(date);
     }
@@ -77,12 +81,16 @@ function renderTaskList() {
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){ 
     task={
-        id: task.id,
+        id: generateTaskId,
         title: taskTitle.val(),
         date: taskDate.val(),
         description: taskDescription.val()
     }
-    const tempStore = json.parse(localStorage.getItem('tasks'));
+    if(localStorage.getItem('tasks')){
+        const tempStore = json.parse(localStorage.getItem('tasks'));
+    }else{
+        tempStore = [];
+    }
     tempStore.push(task);
     localStorage.setItem('tasks', JSON.stringify(tempStore));
     console.log(tempStore);
