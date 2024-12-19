@@ -5,9 +5,28 @@ const taskTitle = $('#taskTitle');
 const taskDate = $('#taskDate');
 const taskDescription = $('#taskDescription');
 const submitTask = $('#submitTask');
+const todo = $('#todo-cards');
+const inProgress = $('#in-progress');
+const done = $('#done');
+
+//create today's date
+function todaysDate (){
+    const today = new Date();
+    let day = today.getDate();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+
+    day = day < 10 ? '0' + day : day;
+    month = month < 10 ? '0' + month : month;
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+}
 
 
 let task; 
+let tempStore;
 
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
@@ -36,31 +55,53 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-    //CREATE A SWITCH CASE TO TOGGLE LIST BETWEEN TODO, DONE AND IN PROGRESS BASED ON DATE 
     for(let i = 0; i < taskList.length; i++){
-       
+
+        //taskCard element
+        const taskCard = document.createElement('div');
+        taskCard.classList.add('card', 'draggable');
+        console.log(taskCard);        
+        console.log('display date' + taskList[i].date);
+        console.log(Date.now());
+        // console.log(todaysDate());
+        
+                
+        
+        if (taskList[i].date = Date.now()){
+            inProgress.append(taskCard);
+        }else if(taskList[i].date < Date.now()){
+            done.append(taskCard);
+        }else{
+            todo.append(taskCard);
+        }
         //element for title
         const title = document.createElement('div');
         title.textContent = taskList[i].title;
         title.style.left = taskList[i].title.left;
         title.style.top = taskList[i].title.top;
-        title.classList.add('cardTitle', 'draggable');
-        taskCard[i].appendChild(title);
+        title.classList.add('cardTitle');
+        taskCard.append(title);
         //element for description
         const description = document.createElement('div');
         description.textContent =taskList[i].description;
         description.style.left =taskList[i].description.left;
         description.style.top =taskList[i].description.top;
-        description.classList.add('cardDescription', 'draggable');
-        taskCard[i].appendChild(description);
+        description.classList.add('cardDescription');
+        taskCard.append(description);
         
         //element for date
         const date = document.createElement('div');
-        date.textContent = taskList[i].date;
+        date.textContent = JSON.stringify(taskList[i].date);
         date.style.left = taskList[i].date.left;
         date.style.top = taskList[i].date.top;
-        date.classList.add('cardDate', 'draggable');
-        taskCard[i].appendChild(date);
+        date.classList.add('cardDate');
+        taskCard.append(date);
+
+        console.log('testing for date ');
+        console.log(date);
+        
+
+        
     }
     $('#to-do').droppable({
         accept: 'draggable',
@@ -76,6 +117,7 @@ function renderTaskList() {
         accept: 'draggable',
         drop: handleDrop,
     })
+    
 }
  
 // Todo: create a function to handle adding a new task
@@ -87,7 +129,7 @@ function handleAddTask(event){
         description: taskDescription.val()
     }
     if(localStorage.getItem('tasks')){
-        const tempStore = json.parse(localStorage.getItem('tasks'));
+        tempStore = jQuery.parseJSON(localStorage.getItem('tasks'));
     }else{
         tempStore = [];
     }
@@ -129,7 +171,9 @@ function handleDrop(event, ui) {
 $(document).ready(function () {
     submitTask.click(function () {
         console.log('testing working');
+        event.preventDefault();
         handleAddTask();
+        renderTaskList();
         
     });
 
