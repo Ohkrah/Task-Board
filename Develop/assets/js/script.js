@@ -63,7 +63,7 @@ function renderTaskList() {
         console.log(taskCard);        
         console.log('display date' + taskList[i].date);
         console.log(Date.now());
-        // console.log(todaysDate());
+        console.log(todaysDate());
         
                 
         
@@ -91,7 +91,7 @@ function renderTaskList() {
         
         //element for date
         const date = document.createElement('div');
-        date.textContent = JSON.stringify(taskList[i].date);
+        date.textContent = taskList[i].date;
         date.style.left = taskList[i].date.left;
         date.style.top = taskList[i].date.top;
         date.classList.add('cardDate');
@@ -101,6 +101,12 @@ function renderTaskList() {
         console.log(date);
         
 
+        if(taskDate < Date.now()){
+            taskCard.classList.add('text-bg-danger')
+        } else{
+            taskCard.classList.add('text-bg-warning')
+    
+        }
         
     }
     $('#to-do').droppable({
@@ -117,6 +123,7 @@ function renderTaskList() {
         accept: 'draggable',
         drop: handleDrop,
     })
+
     
 }
  
@@ -176,5 +183,6 @@ $(document).ready(function () {
         renderTaskList();
         
     });
+    renderTaskList();
 
 });
